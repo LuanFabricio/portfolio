@@ -22,7 +22,7 @@ export default function hander(
       const repositories: Repositories[] = r;
       res.status(200).json(repositories);
     })
-    .catch((e) => {
+    .catch(() => {
       res.status(400);
     });
 }
