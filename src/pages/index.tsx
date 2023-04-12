@@ -123,8 +123,6 @@ export default function Home({ userName }: { userName: string }) {
 }
 
 export function getStaticProps(): { props: { userName: string } } {
-  console.log("Env: ", process.env);
-
   const userName = process.env.USER_NAME || "Erro!";
 
   return {
