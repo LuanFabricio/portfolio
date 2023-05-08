@@ -1,28 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import type { Repository } from "../../types/repositories";
+import Repositories from "@/services/repositories";
 
-type Repositories = {
-  name: string;
-  description: string;
-};
-
-export default function hander(
+export default async function hander(
   _req: NextApiRequest,
-  res: NextApiResponse<Repositories[]>
+  res: NextApiResponse<Repository[] | { error: string }>
 ) {
-  // res.status(200).json(repositories);
-  fetch(
-    "https://raw.githubusercontent.com/LuanFabricio/portfolio-data/main/repositories.json"
-  )
-    .then((r) => {
-      console.log(r);
-      return r.json();
-    })
-    .then((r) => {
-      console.log(r);
-      const repositories: Repositories[] = r;
-      res.status(200).json(repositories);
-    })
-    .catch(() => {
-      res.status(400);
-    });
+  const repositories = new Repositories();
+
+  try {
+    const repos = await repositories.getAll();
+    res.status(200).json(repos);
+  } catch (e) {
+    res.status(400).json({ error: "failed to load data" });
+  }
 }
