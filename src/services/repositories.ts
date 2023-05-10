@@ -4,13 +4,16 @@ import assert from "assert";
 import axios from "axios";
 
 export default class Repositories {
-  private readonly repository_url = process.env.REPO_URL || "";
+  private repository_url = process.env.REPO_URL || "";
 
-  constructor() {
-    assert(this.repository_url.length > 0);
+  setUrl(url: string) {
+    assert(url.length > 0);
+    this.repository_url = url;
   }
 
   async getAll(): Promise<Repository[]> {
+    assert(this.repository_url.length > 0);
+
     let repositories: Repository[] | undefined;
     try {
       const repo = await axios.get<RepositoryAPI>(this.repository_url);
@@ -30,6 +33,8 @@ export default class Repositories {
   }
 
   async getById(id: number): Promise<Repository> {
+    assert(this.repository_url.length > 0);
+
     let repository: Repository | undefined;
     try {
       const repositories = await this.getAll();
