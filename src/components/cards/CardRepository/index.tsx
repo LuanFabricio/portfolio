@@ -11,10 +11,10 @@ type CardRepositoryProps = {
 };
 
 /**
-* Component to show repository name, description, tags and url.
-* @param props {CardRepositoryProps} - Props with repository information.
-* @returns {JSX.Element} Card component.
-*/
+ * Component to show repository name, description, tags and url.
+ * @param props {CardRepositoryProps} - Props with repository information.
+ * @returns {JSX.Element} Card component.
+ */
 export default function CardRepository({
   title,
   description,
@@ -24,8 +24,8 @@ export default function CardRepository({
   const cardTags = tags.map((name) => <RepositoryTag key={name} name={name} />);
 
   return (
-    <Link href={`https://${url}`} data-testid="card-link">
-      <div className="max-w-sm rounded overflow-hidden shadow-lg">
+    <div className="max-w-sm max-h-sm rounded overflow-hidden shadow-lg bg-white m-1.5">
+      <Link href={`https://${url}`} data-testid="card-link">
         <div className="px-6 py-4">
           <div className="font-bold text-xl mb-2" data-testid="card-title">
             {title}
@@ -37,7 +37,7 @@ export default function CardRepository({
         <div className="px-6 pt-4 pb-2" data-testid="card-section-tags">
           {cardTags}
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }
