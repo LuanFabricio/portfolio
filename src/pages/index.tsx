@@ -1,20 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import Description from "@/components/home/description";
 import ListRepositories from "@/components/home/list_repositories";
+import Repositories from "@/services/repositories";
+import type { Repository } from "@/types/repositories";
+import TagList from "@/components/home/tag_list";
+import type { TagItem } from "@/types/tags";
 
 type HomeProps = {
   userName: string;
   userDescription: string;
-  repo_url: string;
+  repositories: Repository[];
 };
 
 export default function Home({
   userName,
   userDescription,
-  repo_url,
+  repositories,
 }: HomeProps) {
+  const [filtersTag, setFiltersTag] = useState<string[]>([]);
+
+  const [allTags, setAllTags] = useState(new Set<TagItem>());
+
+  useEffect(() => {
+    const newAllTags = new Set<TagItem>();
+    for (const { tags } of repositories) {
+      for (const tag of tags) {
+        newAllTags.add({ name: tag, active: false });
+      }
+    }
+    setAllTags(newAllTags);
+  }, []);
+
+  useEffect(() => {
+    const newFiltersTags: string[] = [];
+
+    allTags.forEach((tag) => {
+      if (tag.active) {
+        newFiltersTags.push(tag.name);
+      }
+    });
+
+    setFiltersTag(newFiltersTags);
+  }, [allTags]);
+
   return (
     <>
       <Head>
@@ -28,23 +58,31 @@ export default function Home({
           <Description description={userDescription} />
         </div>
         <div>
-          <ListRepositories url={repo_url} />
+          <TagList tags={allTags} setTags={setAllTags} />
+          <ListRepositories
+            repositories={repositories}
+            expectedTags={filtersTag}
+          />
         </div>
       </main>
     </>
   );
 }
 
-export function getStaticProps(): { props: HomeProps } {
+export async function getServerSideProps(): Promise<{ props: HomeProps }> {
   const userName = process.env.USER_NAME || "Erro!";
   const userDescription = process.env.USER_DESCRIPTION || "Erro!";
-  const repo_url = process.env.REPO_URL || "Erro!";
 
-  return {
-    props: {
-      userName,
-      userDescription,
-      repo_url,
-    },
-  };
+  const repos = new Repositories();
+  const repositories = await repos.getAll();
+
+  return new Promise((resolve) =>
+    resolve({
+      props: {
+        userName,
+        userDescription,
+        repositories,
+      },
+    })
+  );
 }

@@ -4,7 +4,8 @@ import Repositories from "@/services/repositories";
 import CardRepository from "../cards/CardRepository";
 
 type ListRepositoriesProps = {
-  url: string;
+  repositories: Repository[];
+  expectedTags?: string[];
 };
 
 /**
@@ -12,29 +13,30 @@ type ListRepositoriesProps = {
  * @param {ListRepositoriesProps} props - Props with a repository url.
  * @returns {JSX.Element} Div with a list of cards with repositories data.
  * */
-export default function ListRepositories({ url }: ListRepositoriesProps) {
-  const [repositories, setRepositories] = useState<Repository[]>([]);
+export default function ListRepositories({
+  repositories,
+  expectedTags = [],
+}: ListRepositoriesProps) {
+  const cards: JSX.Element[] = [];
 
-  const repos = new Repositories();
-  repos.setUrl(url);
+  for (const { name, description, link, tags } of repositories) {
+    for (const tag of tags) {
+      if (expectedTags.length === 0 || expectedTags.includes(tag)) {
+        cards.push(
+          <CardRepository
+            key={name}
+            title={name}
+            description={description}
+            url={link}
+            tags={tags}
+          />
+        );
+        break;
+      }
+    }
+  }
 
-  useEffect(() => {
-    repos.getAll().then((r) => {
-      setRepositories(r);
-    });
-  }, []);
-
-  const cards = repositories.map(({ name, description, link, tags }) => (
-    <CardRepository
-      key={name}
-      title={name}
-      description={description}
-      url={link}
-      tags={tags}
-    />
-  ));
-
-  const className = "rounded grid grid-cols-2 col-auto bg-gray-500 p-6";
+  const className = "rounded grid grid-cols-3 col-auto bg-gray-500 p-6";
 
   return <div className={className}>{cards}</div>;
 }
