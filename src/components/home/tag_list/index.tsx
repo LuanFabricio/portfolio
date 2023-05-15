@@ -3,16 +3,30 @@ import type { TagItem } from "@/types/tags";
 import TagButton from "./tag_button";
 
 type TagListProps = {
+  /**
+   * Set of tags in repositories list.
+   * */
   tags: Set<TagItem>;
+  /**
+   * Function to update tag status.
+   * */
   setTags: (value: Set<TagItem>) => void;
 };
 
-export default function TagList({ tags, setTags }: TagListProps) {
+/**
+ * List with all tags in user's repositories.
+ * @prop {Set<TagItem>}  tags - Set of all tags in user's repositories list.
+ * @prop {(value: Set<TagItem>) => void} setTags - Function for update tags set.
+ * @returns {JSX.Element}
+ * */
+export default function TagList({ tags, setTags }: TagListProps): JSX.Element {
   const tagsButtos: JSX.Element[] = [];
 
   tags.forEach((tag) => {
     tagsButtos.push(
-      <TagButton key={tag.name} tag={tag}
+      <TagButton
+        key={tag.name}
+        tag={tag}
         onClick={() => {
           // FIX: Too slow and create memory (bad for TS/JS)
           const newTags = new Set<TagItem>();

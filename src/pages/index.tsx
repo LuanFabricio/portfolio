@@ -9,8 +9,17 @@ import TagList from "@/components/home/tag_list";
 import type { TagItem } from "@/types/tags";
 
 type HomeProps = {
+  /**
+   * User name.
+   * */
   userName: string;
+  /**
+   * User's description.
+   * */
   userDescription: string;
+  /**
+   * User's repositories by git api.
+   * */
   repositories: Repository[];
 };
 

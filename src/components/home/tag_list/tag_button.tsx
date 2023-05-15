@@ -12,7 +12,16 @@ type TagButtonProps = {
 
 const DEFAULT_CLASS_NAME = "m-3 p-1.5 px-3 rounded";
 
-export default function TagButton({ tag, onClick }: TagButtonProps) {
+/**
+ * Button for add a tag on filter list.
+ * @prop {TagItem} tag - Name and active status for a tag.
+ * @prop {() => void} onClick - Function for update the status for a tag.
+ * @returns {JSX.Element}
+ * */
+export default function TagButton({
+  tag,
+  onClick,
+}: TagButtonProps): JSX.Element {
   let finalClassName = DEFAULT_CLASS_NAME;
   if (tag.active) {
     finalClassName += ` ${TAG_BUTTON_ACTIVE_BG_COLOR}`;

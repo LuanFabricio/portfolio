@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import type { Repository } from "@/types/repositories";
-import Repositories from "@/services/repositories";
 import CardRepository from "../cards/CardRepository";
 
 type ListRepositoriesProps = {
@@ -10,13 +9,14 @@ type ListRepositoriesProps = {
 
 /**
  * Create a list of repositories by a url
- * @param {ListRepositoriesProps} props - Props with a repository url.
+ * @prop {Repository[]} repositories - Array with user's repositories.
+ * @prop {string[]} repositories - Tags for filter user's repositories.
  * @returns {JSX.Element} Div with a list of cards with repositories data.
  * */
 export default function ListRepositories({
   repositories,
   expectedTags = [],
-}: ListRepositoriesProps) {
+}: ListRepositoriesProps): JSX.Element {
   const cards: JSX.Element[] = [];
 
   for (const { name, description, link, tags } of repositories) {
